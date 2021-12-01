@@ -8,7 +8,7 @@ We will divide the images such that, training set will contain 20 images and the
 
 ## Repository contents:
 The app.py is the flask implementation of the R2UNET model where the model is deployed on the web.
-The models foder must contain the h5 or the hdf5 format of the weigths of the model.
+The weights of the model in the model.h5 file and also model.json file must be present here where this readme file is.
 The main.py is the the code od the model if you want to implement locally in your PC.
 Makes sure that you give correct file paths of training and testing sets that you will make when you download the database.
 
