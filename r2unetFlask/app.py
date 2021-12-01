@@ -1,6 +1,7 @@
 ﻿from __future__ import division, print_function
 import os
 from flask.helpers import send_file
+from keras.saving.model_config import model_from_json
 import numpy as np
 import cv2
 from keras.applications.imagenet_utils import preprocess_input, decode_predictions
@@ -68,11 +69,21 @@ test_set_x, test_set_y = prepare_data(testing_set,test_set_output_set)
 print('Model loaded. Start serving...')
 
 def model_predict(img_path):
-    # Model saved with Keras model.save()
-    MODEL_PATH = 'C:/Users/Aayush Malde/Desktop/aayush documents/djangoProj/retinaBloodVesselSegmentation/r2unetFlask/models/weights3.best.hdf5'
+    # # Model saved with Keras model.save()
+    # MODEL_PATH = 'C:/Users/Aayush Malde/Desktop/aayush documents/djangoProj/retinaBloodVesselSegmentation/r2unetFlask/models/weights3.best.hdf5'
+    # #Load your trained model
+    # model = load_model(MODEL_PATH)
+    json_file = open('model.json','r')
+    loaded_model_json = json_file.read()
+    json_file.close()
 
-    #Load your trained model
-    model = load_model(MODEL_PATH)
+    # use Keras model_from_json to make a loaded model
+
+    loaded_model = model_from_json(loaded_model_json)
+
+    # load weights into new model
+
+    loaded_model.load_weights("model_weights.h5")
     # Preprocessing the image
     # img = image.img_to_array(img)
     # img = np.expand_dims(img, axis=0)
@@ -82,11 +93,12 @@ def model_predict(img_path):
     img=cv2.resize(img, (ROWS,COLS),interpolation=cv2.INTER_CUBIC)
     plt.imshow(img)
     plt.savefig('C:/Users/Aayush Malde/Desktop/aayush documents/djangoProj/retinaBloodVesselSegmentation/r2unetFlask/static/images/saved_figure2.jpeg')
-
+    X[0]=img
     X = X.astype(np.float32)
     X=X/255
+
     print(img.shape)
-    preds = model.predict(test_set_x,verbose=1)
+    preds = loaded_model.predict(X,verbose=1)
     plt.imshow(np.squeeze(preds[0]))
     plt.savefig('C:/Users/Aayush Malde/Desktop/aayush documents/djangoProj/retinaBloodVesselSegmentation/r2unetFlask/static/images/svd_fig1.jpeg')
     pred_test_t=(preds>0.5).astype(np.int32)
