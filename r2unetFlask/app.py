@@ -16,19 +16,10 @@ from skimage import io
 plt.rcParams['figure.figsize'] = (5.0, 4.0) # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
 plt.rcParams['image.cmap'] = 'gray'
-# coding=utf-8
-# import sys
 
-# import glob
-# import re
-
-# import base64
-# from io import BytesIO 
-# Flask utils
-# from gevent.pywsgi import WSGIServer
 import matplotlib.pyplot as plt
 import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #if u want to disable  GPU
 
 ROWS= 320
 COLS= 320
@@ -69,10 +60,6 @@ test_set_x, test_set_y = prepare_data(testing_set,test_set_output_set)
 print('Model loaded. Start serving...')
 
 def model_predict(img_path):
-    # # Model saved with Keras model.save()
-    # MODEL_PATH = 'C:/Users/Aayush Malde/Desktop/aayush documents/djangoProj/retinaBloodVesselSegmentation/r2unetFlask/models/weights3.best.hdf5'
-    # #Load your trained model
-    # model = load_model(MODEL_PATH)
     json_file = open('model.json','r')
     loaded_model_json = json_file.read()
     json_file.close()
@@ -84,9 +71,8 @@ def model_predict(img_path):
     # load weights into new model
 
     loaded_model.load_weights("model_weights.h5")
-    # Preprocessing the image
-    # img = image.img_to_array(img)
-    # img = np.expand_dims(img, axis=0)
+    
+    #taking user image and preprocessing on it
     X = np.zeros((m,ROWS,COLS,CHANNEL),dtype = np.float32)
     img = cv2.imread(img_path,cv2.IMREAD_COLOR)
     print(img.shape)
